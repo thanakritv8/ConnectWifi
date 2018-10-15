@@ -1,0 +1,17 @@
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\CheckConnect.exe.config
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.vbprojResolveAssemblyReference.cache
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.Load.resources
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.Resources.resources
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.usc.resources
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.vbproj.GenerateResource.Cache
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.xml
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\CheckConnect.exe
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\CheckConnect.pdb
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\CheckConnect.xml
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.exe
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\obj\Debug\CheckConnect.pdb
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\ConnectWifi.exe
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\SimpleWifi.dll
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\ConnectWifi.pdb
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\ConnectWifi.xml
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\CheckConnect\bin\Debug\SimpleWifi.pdb

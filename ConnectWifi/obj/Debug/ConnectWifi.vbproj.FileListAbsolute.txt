@@ -1,0 +1,14 @@
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.exe.config
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.exe
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.pdb
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.xml
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.vbprojResolveAssemblyReference.cache
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.Resources.resources
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.vbproj.GenerateResource.Cache
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.exe
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.xml
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.pdb
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\SimpleWifi.dll
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\SimpleWifi.pdb
+c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.Load.resources
+C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.MsgClose.resources
