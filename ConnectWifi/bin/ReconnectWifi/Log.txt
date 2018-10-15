@@ -1,0 +1,24 @@
+
+2018-10-02 16:15:14	Wifi Reconnect Roki-Client	CPU Use 33.05 %	Ram 1061 Available MBytes
+2018-10-02 17:08:04	Wifi Reconnect 	CPU Use 23.3 %	Ram 1139 Available MBytes
+2018-10-02 17:22:53	Wifi Reconnect 	CPU Use 100 %	Ram 1298 Available MBytes
+2018-10-02 17:25:12	Wifi Reconnect Roki-Barcode	CPU Use 13.72 %	Ram 1182 Available MBytes
+2018-10-02 20:29:44	Wifi Reconnect 	CPU Use 32.95 %	Ram 2356 Available MBytes
+2018-10-02 20:56:07	Wifi Reconnect 	CPU Use 39.96 %	Ram 2358 Available MBytes
+2018-10-02 20:56:23	Wifi Reconnect .@  3BB_WiFi	CPU Use 67.52 %	Ram 2173 Available MBytes
+2018-10-02 21:12:40	Wifi Reconnect Thanakrit 5G	CPU Use 58.61 %	Ram 2216 Available MBytes
+2018-10-02 21:12:53	Wifi Reconnect Thanakrit 5G	CPU Use 92.24 %	Ram 2160 Available MBytes
+2018-10-02 21:13:06	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2161 Available MBytes
+2018-10-02 21:13:19	Wifi Reconnect Thanakrit 5G	CPU Use 92.39 %	Ram 2150 Available MBytes
+2018-10-02 21:13:32	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2151 Available MBytes
+2018-10-02 21:13:46	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2193 Available MBytes
+2018-10-02 21:13:59	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2182 Available MBytes
+2018-10-02 21:14:12	Wifi Reconnect Thanakrit 5G	CPU Use 52.02 %	Ram 2180 Available MBytes
+2018-10-02 21:14:25	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2173 Available MBytes
+2018-10-02 21:14:39	Wifi Reconnect Thanakrit 5G	CPU Use 100 %	Ram 2174 Available MBytes
+2018-10-03 07:44:50	Wifi Reconnect 	CPU Use 38.63 %	Ram 1571 Available MBytes
+2018-10-03 16:31:14	Wifi Reconnect 	CPU Use 49.61 %	Ram 1202 Available MBytes
+2018-10-04 07:37:44	Wifi Reconnect 	CPU Use 86.56 %	Ram 1132 Available MBytes
+2018-10-04 13:15:18	Wifi Reconnect 	CPU Use 86.94 %	Ram 2149 Available MBytes
+2018-10-04 16:32:01	Wifi Reconnect 	CPU Use 92.06 %	Ram 1089 Available MBytes
+2018-10-05 08:16:09	Wifi Reconnect 	CPU Use 96.3 %	Ram 2024 Available MBytes
