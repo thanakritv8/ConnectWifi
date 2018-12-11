@@ -101,4 +101,5 @@ Public Class usc
         Dim _SQL As String = "INSERT INTO [WiFiLog].[dbo].[ProblemLog] (Machine, ListData, Status) VALUES ('" & nameComputer & "', '" & _msg & "', 0)"
         objDB.ExecuteSQL(_SQL, _con)
     End Sub
+
 End Class

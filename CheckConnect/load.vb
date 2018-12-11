@@ -8,6 +8,7 @@ Public Class Load
     Dim _con As SqlConnection
     Dim _t As Threading.Thread
     Private Sub Load_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'SendLine("Bu8OtlIW8Jky45ej5jVXFQ3NNrCuMLpOJ7NDgNcjYYZ", "2018-11-13 12:49:44	SQL Stop	CPU Use 27.5 	Ram 2302 Available MBytes => " & "STA028")
         _con = objDB.ConnectDB("192.168.100.199", "sa", "SysTem@dmin", "ReconnectWifi")
         Dim dtLoc As DataTable = GetLocation()
         ReDim usc(dtLoc.Rows.Count - 1)
@@ -38,17 +39,33 @@ Public Class Load
     Private Sub Run()
         While _t.IsAlive
             Try
+                'Send Msg to line
                 Dim dtMsg As DataTable = GetMsg()
                 For Each _Item In dtMsg.Rows
                     SendLine(Command, _Item("ListData") & " => " & _Item("Machine"))
                     UpdateMSg(_Item("SEQ"))
                 Next
                 Threading.Thread.Sleep(1000)
+                'Check Online
+                Dim dtMach As DataTable = GetMach()
+                For Each _Item In dtMach.Rows
+                    UpdateCountOnline(_Item("NameMachine"))
+                Next
             Catch ex As Exception
 
             End Try
 
         End While
+    End Sub
+
+    Private Function GetMach()
+        Dim _SQL As String = "SELECT * FROM [WiFiLog].[dbo].[ListMachine]"
+        Return objDB.SelectSQL(_SQL, _con)
+    End Function
+
+    Private Sub UpdateCountOnline(ByVal _Machine As String)
+        Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET CountOnline = CountOnline + 1 WHERE NameMachine = '" & _Machine & "'"
+        objDB.ExecuteSQL(_SQL, _con)
     End Sub
 
     Private Function GetMsg() As DataTable
@@ -65,7 +82,7 @@ Public Class Load
             Cursor.Current = Cursors.WaitCursor
             System.Net.ServicePointManager.Expect100Continue = False
             Dim request = DirectCast(WebRequest.Create("https://notify-api.line.me/api/notify”), HttpWebRequest)
-            Dim postData = String.Format("message={0}", _Msg)
+            Dim postData = String.Format("message={0}", _Msg.Replace("%", ""))
             Dim data = Encoding.UTF8.GetBytes(postData)
             request.Method = "POST"
             request.ContentType = "application/x-www-form-urlencoded"

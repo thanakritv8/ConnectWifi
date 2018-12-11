@@ -51,6 +51,7 @@ Public Class Load
         Dim cRam As Double
         GetCPU(cCpu, cRam)
         InsertLog(Format(Now, "yyyy-MM-dd HH:mm:ss") & vbTab & Problem & vbTab & "CPU Use " & cCpu & " %" & vbTab & "Ram " & cRam & " Available MBytes")
+        ShowList(Format(Now, "yyyy-MM-dd HH:mm:ss") & vbTab & Problem & vbTab & "CPU Use " & cCpu & " %" & vbTab & "Ram " & cRam & " Available MBytes")
         'WriteTxt(Format(Now, "yyyy-MM-dd HH:mm:ss") & vbTab & Problem & vbTab & "CPU Use " & cCpu & " %" & vbTab & "Ram " & cRam & " Available MBytes")
     End Sub
     Public Sub WriteTxt(ByVal Msg As String)
@@ -69,16 +70,38 @@ Public Class Load
 #End Region
 
 #Region "Thread"
+    Delegate Sub DelUpdateStatusRun(ByVal _numPro As Integer)
+    Private Sub UpdateStatusRun(ByVal _numPro As Integer)
+        If InvokeRequired Then
+            Invoke(New DelUpdateStatusRun(AddressOf UpdateStatusRun), _numPro)
+        Else
+            pb.Value = _numPro
+        End If
+    End Sub
+
+    Delegate Sub DelShowList(ByVal _msg As String)
+    Private Sub ShowList(ByVal _msg As String)
+        If InvokeRequired Then
+            Invoke(New DelShowList(AddressOf ShowList), _msg)
+        Else
+            If _msg = "Clear" Then
+                lb.Items.Clear()
+            Else
+                lb.Items.Add(_msg)
+            End If
+        End If
+    End Sub
+
     Private Sub Run()
         While _t.IsAlive
             'Connect Wifi
+            UpdateStatusRun(0)
             Try
                 Dim access_points As List(Of SimpleWifi.AccessPoint) = Wifi.GetAccessPoints()
                 Dim numAccess As Integer = 0
                 Dim boolStatus As Boolean = False
                 Dim ssidErr As String = String.Empty
 
-#Region "Check Connect"
                 'Check ssid and ping 
                 For i As Integer = 0 To access_points.Count - 1
                     If access_points(i).IsConnected Then
@@ -103,9 +126,7 @@ Public Class Load
                         End If
                     End If
                 Next
-#End Region
-
-#Region "Reconect and record log"
+                UpdateStatusRun(50)
                 'Connect wifi and record
                 If Not boolStatus Then
                     For i As Integer = 0 To access_points.Count - 1
@@ -118,14 +139,12 @@ Public Class Load
                     Dim access_point = access_points(numAccess)
                     Dim auth_access = New SimpleWifi.AuthRequest(access_point)
 
-#Region "Have Password"
                     'If auth_access.IsPasswordRequired Then
                     '    If Not access_point.HasProfile Then
                     '        'TODO: request password, then
                     '        auth_access.Password = "typed password"
                     '    End If
                     'End If
-#End Region
 
                     If Not Wifi.Connect(access_point, auth_access) Then
                         access_point.DeleteProfile()
@@ -136,15 +155,15 @@ Public Class Load
                     End If
 
                 End If
-#End Region
+                UpdateStatusRun(75)
 
             Catch ex As Exception
                 Wifi.Disconnect()
                 Threading.Thread.Sleep(2500)
+                ShowList(Format(Now, "yyyy-MM-dd HH:mm:ss") & " " & ex.Message)
             End Try
             'End Connect Wifi
 
-#Region "Check SQL Server"
             'Start SQL Server Auto
             Try
                 Dim service As ServiceController = New ServiceController(serviceApp)
@@ -156,10 +175,10 @@ Public Class Load
                     SendLog("SQL Stop")
                 End If
             Catch ex As Exception
-                Application.Restart()
+                ShowList(Format(Now, "yyyy-MM-dd HH:mm:ss") & " " & ex.Message)
+                'Application.Restart()
             End Try
-#End Region
-
+            UpdateStatusRun(100)
             'End Start SQL Server Auto
             Threading.Thread.Sleep(2500)
         End While
@@ -170,6 +189,9 @@ Public Class Load
 #Region "Event"
 
     Private Sub Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lbDateStart.Text = Now
+        ShowInTaskbar = False
+        WindowState = FormWindowState.Minimized
         'CheckIfRunning()
         Try
             My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue(Application.ProductName, Application.ExecutablePath)
@@ -178,10 +200,10 @@ Public Class Load
         End Try
 
         nameComputer = Environment.MachineName
-        'serviceApp = "MSSQL$SQLEXPRESS"
-        serviceApp = "MSSQLSERVER"
-        'cmd = "Roki-Barcode,192.168.100.38,192.168.100.33".Split(",") 'Command().Split(",")  'ex nameSSID,IP1,IP2
-        cmd = "Roki-Client,192.168.100.38,192.168.100.33".Split(",")
+        serviceApp = "MSSQL$SQLEXPRESS"
+        'serviceApp = "MSSQLSERVER"
+        cmd = "Roki-Barcode,192.168.100.38,192.168.100.33".Split(",") 'Command().Split(",")  'ex nameSSID,IP1,IP2
+        'cmd = "Roki-Client,192.168.100.38,192.168.100.33".Split(",")
         ssid = cmd(0)
         ip1 = cmd(1)
         ip2 = cmd(2)
@@ -190,21 +212,35 @@ Public Class Load
         _t.IsBackground = True
         _t.Start()
     End Sub
-    Private Sub btHide_Click(sender As Object, e As EventArgs) Handles btHide.Click
+    Private Sub btHide_Click(sender As Object, e As EventArgs)
+        ShowInTaskbar = False
         Hide()
     End Sub
     Private Sub ShowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowToolStripMenuItem.Click
+        Me.ShowInTaskbar = True
         Show()
     End Sub
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Dim frm As MsgClose = New MsgClose
-        Me.Hide()
+        Hide()
         If frm.ShowDialog = DialogResult.OK Then
             Application.Exit()
         End If
     End Sub
     Private Sub niIcon_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles niIcon.MouseDoubleClick
         Show()
+        ShowInTaskbar = True
+    End Sub
+
+    Private Sub Load_Resize(sender As System.Object, e As System.EventArgs) Handles MyBase.Resize
+        If Me.WindowState = FormWindowState.Minimized Then
+            ShowInTaskbar = False
+            Hide()
+        End If
+    End Sub
+
+    Private Sub Button1_Click(sender As System.Object, e As System.EventArgs) Handles Button1.Click
+        Me.Hide()
     End Sub
 
 #End Region

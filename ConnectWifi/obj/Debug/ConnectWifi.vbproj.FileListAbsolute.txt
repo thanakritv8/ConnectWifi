@@ -12,3 +12,16 @@ c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWi
 c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\bin\Debug\SimpleWifi.pdb
 c:\users\thanakrit.j\documents\visual studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.Load.resources
 C:\Users\Thanakrit.J\Documents\Visual Studio 2015\Projects\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.MsgClose.resources
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.exe.config
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.exe
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.xml
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.pdb
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.exe
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.pdb
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\bin\Debug\ConnectWifi.xml
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\bin\Debug\SimpleWifi.pdb
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.vbprojResolveAssemblyReference.cache
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.Load.resources
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.MsgClose.resources
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.Resources.resources
+C:\Thung\JobRoki\SourceCode\ConnectWifi\ConnectWifi\obj\Debug\ConnectWifi.vbproj.GenerateResource.Cache
