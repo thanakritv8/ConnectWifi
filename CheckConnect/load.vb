@@ -7,21 +7,42 @@ Public Class Load
     Dim usc(0) As usc
     Dim _con As SqlConnection
     Dim _t As Threading.Thread
-    Private Sub Load_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    Private Sub CheckPMS()
+        Dim _SQL As String = "SELECT lm.NameMachine, lm.Resp, pl.WorkCenterIP, pl.Code FROM [WiFiLog].[dbo].[ListMachine] as lm right join [WMS].[WMS_ROKI].[dbo].[ProductionLine] as pl on lm.NameMachine = pl.WorkCenterIP where pl.WorkCenterIP is not null AND pl.Code not like '%F1' AND (lm.Resp <> pl.Code OR lm.Resp IS NULL) AND pl.PMSStatusId = 2"
+        Dim dt As DataTable = objDB.SelectSQL(_SQL, _con)
+        If dt.Rows.Count > 0 Then
+            For Each _Item In dt.Rows
+                If IsDBNull(_Item("NameMachine")) Then
+                    _SQL = "INSERT INTO [WiFiLog].[dbo].[ListMachine] ([NameMachine], [Resp], [idLoc], [Status], [CountOnline], [StatusShutdown]) VALUES ('" & _Item("WorkCenterIP") & "', '" & _Item("Code") & "', 4, 0, 0, 0)"
+                    objDB.ExecuteSQL(_SQL, _con)
+                Else
+                    Dim dr() As DataRow = dt.Select("NameMachine = '" & _Item("NameMachine") & "'")
+                    _SQL = "UPDATE [WiFiLog].[dbo].[ListMachine] SET Resp = '" & dr(0)("Code") & "' WHERE NameMachine = '" & _Item("NameMachine") & "'"
+                End If
+            Next
+        End If
+    End Sub
+
+    Private Sub Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'SendLine("Bu8OtlIW8Jky45ej5jVXFQ3NNrCuMLpOJ7NDgNcjYYZ", "2018-11-13 12:49:44	SQL Stop	CPU Use 27.5 	Ram 2302 Available MBytes => " & "STA028")
         _con = objDB.ConnectDB("192.168.100.199", "sa", "SysTem@dmin", "ReconnectWifi")
+        CheckPMS()
         Dim dtLoc As DataTable = GetLocation()
         ReDim usc(dtLoc.Rows.Count - 1)
         Dim interval As Integer = 5
+        Dim _rowUsc As Integer = 7
         Dim x As Integer = interval
         Dim y As Integer = interval
         For i As Integer = 0 To usc.Length - 1
             usc(i) = New usc
             usc(i).Location = New Point(x, y)
             'usc(i).con = _con
+            'usc(i).Loc = dtLoc.Rows(i)("MRP")
             usc(i).Loc = dtLoc.Rows(i)("NameLoc")
             x += usc(i).Size.Width + interval
-            If i = 4 Then
+            If i = _rowUsc Then
+                _rowUsc = (_rowUsc * 2) + 1
                 x = interval
                 y += usc(i).Size.Height + interval
             End If
@@ -34,6 +55,7 @@ Public Class Load
     End Sub
     Private Function GetLocation() As DataTable
         Dim _SQL As String = "SELECT * FROM [WiFiLog].[dbo].[ListLocation]"
+        'Dim _SQL As String = "SELECT DISTINCT(MRP) FROM [WMS].[WMS_ROKI].[dbo].[ProductionLine] WHERE WorkCenterIP is not null"
         Return objDB.SelectSQL(_SQL, _con)
     End Function
     Private Sub Run()
@@ -42,11 +64,12 @@ Public Class Load
                 'Send Msg to line
                 Dim dtMsg As DataTable = GetMsg()
                 For Each _Item In dtMsg.Rows
-                    SendLine(Command, _Item("ListData") & " => " & _Item("Machine"))
+                    Dim _Who As String = Command()
+                    SendLine(_Who, _Item("ListData") & " => " & _Item("Machine"))
                     UpdateMSg(_Item("SEQ"))
                 Next
                 Threading.Thread.Sleep(1000)
-                'Check Online
+                'Count push Online
                 Dim dtMach As DataTable = GetMach()
                 For Each _Item In dtMach.Rows
                     UpdateCountOnline(_Item("NameMachine"))
@@ -57,6 +80,11 @@ Public Class Load
 
         End While
     End Sub
+
+    Private Function GetOffline(ByVal _Min As Integer) As DataTable
+        Dim _SQL As String = "SELECT * FROM [WiFiLog].[dbo].[ListMachine] WHERE CountOnline > " & _Min
+        Return objDB.SelectSQL(_SQL, _con)
+    End Function
 
     Private Function GetMach()
         Dim _SQL As String = "SELECT * FROM [WiFiLog].[dbo].[ListMachine]"

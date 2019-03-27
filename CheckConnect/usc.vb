@@ -26,7 +26,18 @@ Public Class usc
 
     Private Function GetMach() As DataTable
         Dim _SQL As String = "SELECT lm.NameMachine, lm.Resp FROM [WiFiLog].[dbo].[ListMachine] AS lm JOIN [WiFiLog].[dbo].[ListLocation] AS ll ON lm.idLoc = ll.SEQ WHERE ll.NameLoc = '" & _Loc & "'"
+        'Dim _SQL As String = "select pl.WorkCenterIP as NameMachine, pl.Code as Resp from [WMS].[WMS_ROKI].[dbo].[ProductionLine] as pl with(nolock) where pl.MRP = '" & _Loc & "' and pl.WorkCenterIP is not null"
         Return objDB.SelectSQL(_SQL, _con)
+    End Function
+
+    Private Function CheckShutdown(ByVal Resp As String) As Boolean
+        Dim _SQL As String = "SELECT * FROM [WiFiLog].[dbo].[ListMachine] WHERE StatusShutdown = 1 AND Resp = '" & Resp & "'"
+        Dim dt As DataTable = objDB.SelectSQL(_SQL, _con)
+        If dt.Rows.Count > 0 Then
+            Return True
+        Else
+            Return False
+        End If
     End Function
 
     Delegate Sub delUplb(ByVal _msg As String)
@@ -58,7 +69,11 @@ Public Class usc
                     If intPing >= 10 Then
                         If GetStatusMachine(_Item("NameMachine")) Then
                             Uplb(_Item("NameMachine") & " => Timeout Send Line")
-                            InsertLog(_Item("Resp") & " : " & _Item("NameMachine"), "Timeout server to client")
+                            If CheckShutdown(_Item("Resp")) Then
+                                InsertLog(_Item("Resp") & " : " & _Item("NameMachine"), "Shutdown")
+                            Else
+                                InsertLog(_Item("Resp") & " : " & _Item("NameMachine"), "Timeout server to client")
+                            End If
                             UpdateStatus(_Item("NameMachine"), 1)
                         Else
                             Uplb(_Item("NameMachine") & " => Timeout")

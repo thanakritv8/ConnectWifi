@@ -52,6 +52,9 @@
   <PropertyGroup>
     <ApplicationIcon>wifi.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="SimpleWifi">
       <HintPath>..\..\..\..\..\Downloads\simplewifi-master\simplewifi-master\SimpleWifi\bin\Debug\SimpleWifi.dll</HintPath>
@@ -127,6 +130,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
