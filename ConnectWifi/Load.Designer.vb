@@ -119,7 +119,7 @@ Partial Class Load
         Me.Controls.Add(Me.pb)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Load"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "ManageWifi"

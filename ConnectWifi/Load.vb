@@ -65,9 +65,13 @@ Public Class Load
         End If
     End Sub
     Private Sub InsertLog(ByVal _msg As String)
+        If _con Is Nothing Then
+            _con = objDB.ConnectDB("192.168.100.199", "sa", "SysTem@dmin", "ReconnectWifi")
+        End If
         Dim mach As String = Resp & " : " & nameComputer
-        Dim _SQL As String = "INSERT INTO [WiFiLog].[dbo].[ProblemLog] (Machine, ListData, Status) VALUES ('" & mach & "', '" & _msg & "', 3)"
+        Dim _SQL As String = "INSERT INTO [WiFiLog].[dbo].[ProblemLog] (Machine, ListData, Status) VALUES ('" & mach & "', '" & _msg & "', 0)"
         objDB.ExecuteSQL(_SQL, _con)
+
     End Sub
 
 #End Region
@@ -100,11 +104,12 @@ Public Class Load
             Try
                 'Connect Wifi
                 UpdateStatusRun(0)
+                Dim ssidErr As String = String.Empty
                 Try
                     Dim access_points As List(Of SimpleWifi.AccessPoint) = Wifi.GetAccessPoints()
                     Dim numAccess As Integer = 0
                     Dim boolStatus As Boolean = False
-                    Dim ssidErr As String = String.Empty
+
 
                     'Check ssid and ping 
                     For i As Integer = 0 To access_points.Count - 1
@@ -119,7 +124,11 @@ Public Class Load
                                     Threading.Thread.Sleep(100)
                                 Next
                                 If intPing >= 10 Then
-                                    Wifi.Disconnect()
+                                    Try
+                                        Wifi.Disconnect()
+                                    Catch ex1 As Exception
+
+                                    End Try
                                     boolStatus = False
                                     Exit For
                                 End If
@@ -162,7 +171,12 @@ Public Class Load
                     UpdateStatusRun(75)
 
                 Catch ex As Exception
-                    Wifi.Disconnect()
+                    Try
+                        Wifi.Disconnect()
+                    Catch ex1 As Exception
+
+                    End Try
+
                     Threading.Thread.Sleep(2500)
                     ShowList(Format(Now, "yyyy-MM-dd HH:mm:ss") & " " & ex.Message)
                 End Try
@@ -185,16 +199,28 @@ Public Class Load
                 UpdateStatusRun(80)
 
                 Try
-                    ClearOffline(nameComputer)
-                    CheckDateTime()
-                Catch ex As Exception
+                    Dim Connectssid As String = String.Empty
+                    Dim access_points As List(Of SimpleWifi.AccessPoint) = Wifi.GetAccessPoints()
+                    For i As Integer = 0 To access_points.Count - 1
+                        If access_points(i).IsConnected Then
+                            Connectssid = access_points(i).Name
+                        End If
+                    Next
+                    If Connectssid = ssid Then
+                        ClearOffline(nameComputer)
+                        CheckDateTime()
+                    End If
 
+                Catch ex As Exception
+                    Dim _TestError As String = ex.Message
                 End Try
+                UpdateStatusRun(90)
+                CheckPlayList()
                 UpdateStatusRun(100)
                 'End Start SQL Server Auto
                 Threading.Thread.Sleep(2500)
             Catch ex As Exception
-
+                Dim _TestError As String = ex.Message
             End Try
 
         End While
@@ -203,9 +229,27 @@ Public Class Load
 #End Region
 
 #Region "Function Status Program"
+    Private Sub ChangeDate()
+        Dim d As DateTime
+        d = "11:13"
+
+        Try
+            Microsoft.VisualBasic.TimeOfDay = d 'Your time...
+            Microsoft.VisualBasic.DateString = "05-02-2019"
+        Catch ex As Exception
+            'You might have to run as Administrator...?
+        End Try
+
+    End Sub
+
     Private Sub ClearOffline(ByVal _Machine As String)
-        Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET CountOnline = 0 WHERE NameMachine = '" & _Machine & "'"
-        objDB.ExecuteSQL(_SQL, _con)
+        Try
+            Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET CountOnline = 0 WHERE NameMachine = '" & _Machine & "'"
+            objDB.ExecuteSQL(_SQL, _con)
+        Catch ex As Exception
+            Dim _TestError As String = ex.Message
+        End Try
+
     End Sub
 
     Private Sub CheckDateTime()
@@ -214,14 +258,14 @@ Public Class Load
         If dtDateNow.Rows.Count > 0 Then
             Dim DateNow As DateTime = Now
             Dim intDiff As Integer = DateDiff(DateInterval.Minute, DateNow, dtDateNow.Rows(0)("dateNow"))
-            If intDiff > 5 Or intDiff < -5 Then
+            If intDiff > 1 Or intDiff < -1 Then
                 InsertLog("Date Time Error " & DateNow & " Diff " & dtDateNow.Rows(0)("dateNow"))
             End If
         End If
     End Sub
 
     Private Function GetResp() As String
-        Dim _SQL As String = "SELECT Resp [WiFiLog].[dbo].[ListMachine] WHERE NameMachine = '" & nameComputer & "'"
+        Dim _SQL As String = "SELECT Resp FROM [WiFiLog].[dbo].[ListMachine] WHERE NameMachine = '" & nameComputer & "'"
         Dim dt As DataTable = objDB.SelectSQL(_SQL, _con)
         If dt.Rows.Count > 0 Then
             Return dt.Rows(0)("Resp").ToString
@@ -229,6 +273,20 @@ Public Class Load
             Return String.Empty
         End If
     End Function
+
+    Private Sub CheckPlayList()
+        Try
+            Dim fso = CreateObject("Scripting.FileSystemObject")
+            Dim profile = fso.GetFolder("C:\Users\" & nameComputer & "\Music\Playlists")
+            If (profile.Size / 1048576) >= 1.9 Then
+                Dim _SQL As String = "INSERT INTO [WiFiLog].[dbo].[supplement_log] (datalist) VALUES ('" & nameComputer & " Play List >= 1.9')"
+                objDB.ExecuteSQL(_SQL, _con)
+            End If
+        Catch ex As Exception
+            Dim _SQL As String = "INSERT INTO [WiFiLog].[dbo].[supplement_log] (datalist) VALUES ('" & nameComputer & " Error Play List " & ex.Message & "')"
+            objDB.ExecuteSQL(_SQL, _con)
+        End Try
+    End Sub
 #End Region
 
 #Region "Event"
@@ -244,28 +302,55 @@ Public Class Load
 
     Private Sub Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            lbDateStart.Text = Now
+
+            'ChangeDate()
+            lbDateStart.Text = Now & " Build: 1.0.1"
             ShowInTaskbar = False
             WindowState = FormWindowState.Minimized
             'CheckIfRunning()
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue(Application.ProductName, Application.ExecutablePath)
-            Catch ex As Exception
-                MsgBox("Please run administrator", MsgBoxStyle.Information, "Information")
-            End Try
-
+            'Try
+            '    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue(Application.ProductName, Application.ExecutablePath)
+            'Catch ex As Exception
+            '    MsgBox("Please run administrator", MsgBoxStyle.Information, "Information")
+            'End Try
             nameComputer = Environment.MachineName
-
-            serviceApp = "MSSQL$SQLEXPRESS"
             'serviceApp = "MSSQLSERVER"
-            'cmd = "Roki-Barcode,192.168.100.38,192.168.100.33".Split(",") 'Command().Split(",")  'ex nameSSID,IP1,IP2
-            cmd = "Roki-Client,192.168.100.38".Split(",")
+            cmd = "Roki-Barcode,192.168.100.38".Split(",") 'Command().Split(",")  'ex nameSSID,IP1,IP2
+            serviceApp = "MSSQL$SQLEXPRESS"
+            'cmd = "Roki-Client,192.168.100.38".Split(",")
             ssid = cmd(0)
             ip1 = cmd(1)
-            _con = objDB.ConnectDB("192.168.100.199", "sa", "SysTem@dmin", "ReconnectWifi")
-            Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET StatusShutdown = 0 WHERE Resp = '" & Resp & "'"
-            objDB.ExecuteSQL(_SQL, _con)
-            Resp = GetResp()
+            Resp = String.Empty
+            Try
+                Dim Connectssid As String = String.Empty
+                Dim access_points As List(Of SimpleWifi.AccessPoint) = Wifi.GetAccessPoints()
+                For i As Integer = 0 To access_points.Count - 1
+                    If access_points(i).IsConnected Then
+                        Connectssid = access_points(i).Name
+                    End If
+                Next
+
+                If My.Computer.Network.Ping(ip1) And Connectssid = ssid Then
+                    Try
+                        _con = objDB.ConnectDB("192.168.100.199", "sa", "SysTem@dmin", "ReconnectWifi")
+                        Resp = IIf(nameComputer = "STA000", "STA000", GetResp())
+                        Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET StatusShutdown = 0 WHERE Resp = '" & Resp & "'"
+                        objDB.ExecuteSQL(_SQL, _con)
+                    Catch ex As Exception
+
+                    End Try
+                End If
+            Catch ex As Exception
+
+            End Try
+
+            If Resp = String.Empty Then
+                Resp = My.Settings.Resp
+            Else
+                My.Settings.Resp = Resp
+                My.Settings.Save()
+            End If
+
             ' CheckDateTime()
             _t = New Threading.Thread(AddressOf Run)
             _t.IsBackground = True

@@ -92,7 +92,7 @@ Public Class Load
     End Function
 
     Private Sub UpdateCountOnline(ByVal _Machine As String)
-        Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET CountOnline = CountOnline + 1 WHERE NameMachine = '" & _Machine & "'"
+        Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET CountOnline = CountOnline + 1 WHERE NameMachine = '" & _Machine & "' AND idLoc <> 3"
         objDB.ExecuteSQL(_SQL, _con)
     End Sub
 

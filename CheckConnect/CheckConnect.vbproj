@@ -107,6 +107,7 @@
   <ItemGroup>
     <EmbeddedResource Include="load.resx">
       <DependentUpon>Load.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

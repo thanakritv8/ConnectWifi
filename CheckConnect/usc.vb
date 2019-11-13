@@ -109,6 +109,11 @@ Public Class usc
 
     Private Sub UpdateStatus(ByVal _Machine As String, ByVal StatusOnline As Integer)
         Dim _SQL As String = "UPDATE [WiFiLog].[dbo].[ListMachine] SET [Status] = " & StatusOnline & " WHERE NameMachine = '" & _Machine & "'"
+        ''If StatusOnline = 0 Then
+        ''    _SQL = "UPDATE [WiFiLog].[dbo].[ListMachine] SET [Status] = " & StatusOnline & ", StatusShutdown = 0 WHERE NameMachine = '" & _Machine & "'"
+        ''Else
+        ''    _SQL = "UPDATE [WiFiLog].[dbo].[ListMachine] SET [Status] = " & StatusOnline & " WHERE NameMachine = '" & _Machine & "'"
+        ''End If
         objDB.ExecuteSQL(_SQL, _con)
     End Sub
 
